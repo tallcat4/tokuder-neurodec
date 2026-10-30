@@ -1,0 +1,35 @@
+{
+  "model": "Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign",
+  "revision": "5ecdb67327fd37bb2e042aab12ff7391903235d3",
+  "model_license": "Apache-2.0",
+  "inference": "CPU float32, no quantization",
+  "seed": 99,
+  "voices": [
+    {
+      "name": "female",
+      "text": "このソフトウェアは、すべての人のために、常に自由であり続けます。",
+      "synthesis_text": "このソフトウェアは、すべての人のために、常に自由であり続けます。",
+      "instruct": "A native Japanese adult female narrator in her thirties, with a clear warm mid-range voice. Speak fluent standard Tokyo Japanese, with natural Japanese pitch accent and smooth connected phrasing. Calm, conversational explanatory narration at a normal pace. Gentle sentence-final falling intonation. Clean studio recording.",
+      "duration_seconds": 5.68,
+      "sample_rate": 24000,
+      "peak_before_scaling": 0.5959761738777161,
+      "scale": 1.0,
+      "codec_frames": 72,
+      "sha256": "a4dca7d72e872cc819dce90dff032e5bbf1e52f3002977615100e2ca8c2fdf05"
+    },
+    {
+      "name": "male",
+      "text": "GPL-3.0は、研究、改変、共有する自由を保証するオープンなライセンスです。",
+      "synthesis_text": "ジーピーエル三点ゼロは、研究、改変、共有する自由を保証するオープンなライセンスです。",
+      "instruct": "A native Japanese adult male narrator in his thirties, with a clear warm medium-low voice. Speak fluent standard Tokyo Japanese, with natural Japanese pitch accent and smooth connected phrasing. Calm, conversational explanatory narration at a normal pace. Gentle sentence-final falling intonation. Clean studio recording.",
+      "duration_seconds": 6.32,
+      "sample_rate": 24000,
+      "peak_before_scaling": 0.5719349980354309,
+      "scale": 1.0,
+      "codec_frames": 80,
+      "sha256": "9248685b14dfc50be65857ac8ea9b7a8fcb1a56a6956b37ee5615060ff300065"
+    }
+  ],
+  "transmitted": true,
+  "capture_pairs": "pairs.json"
+}

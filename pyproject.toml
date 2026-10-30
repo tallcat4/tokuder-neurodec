@@ -1,0 +1,21 @@
+[project]
+name = "tokuder-neurodec"
+version = "0.1.0"
+description = "Experimental neural decoder for TOKUDER (ARIB STD-T99) voice frames"
+readme = "README.md"
+license = "GPL-3.0-or-later"
+requires-python = ">=3.10"
+dependencies = ["numpy", "torch>=2.1", "soundfile"]
+
+[project.optional-dependencies]
+test = ["pytest"]
+
+[project.scripts]
+tokuder2wav = "tokuder_neurodec.cli:main"
+
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["tokuder_neurodec"]

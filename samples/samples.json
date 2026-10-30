@@ -1,0 +1,53 @@
+[
+ {
+  "name": "vctk_p301_female",
+  "frames": 460,
+  "seconds": 9.2,
+  "speaker": "vctk:p301",
+  "gender": "female",
+  "text": "He will emerge as a world leader. You can say he gets a sizeable amount.",
+  "components": [
+   "vctk/p301_205_mic1",
+   "vctk/p301_185_mic1"
+  ]
+ },
+ {
+  "name": "vctk_p351_female",
+  "frames": 476,
+  "seconds": 9.52,
+  "speaker": "vctk:p351",
+  "gender": "female",
+  "text": "She thought she was going to die. It was an ongoing exercise. They were impressive against France.",
+  "components": [
+   "vctk/p351_295_mic1",
+   "vctk/p351_301_mic1",
+   "vctk/p351_324_mic1"
+  ]
+ },
+ {
+  "name": "vctk_p316_male",
+  "frames": 452,
+  "seconds": 9.04,
+  "speaker": "vctk:p316",
+  "gender": "male",
+  "text": "Let's get to know him. Italy would be lukewarm. She was so full of life.",
+  "components": [
+   "vctk/p316_307_mic1",
+   "vctk/p316_346_mic1",
+   "vctk/p316_271_mic1"
+  ]
+ },
+ {
+  "name": "vctk_p258_male",
+  "frames": 456,
+  "seconds": 9.12,
+  "speaker": "vctk:p258",
+  "gender": "male",
+  "text": "Until you hit the big games. Wish I could be there on Sunday in person but I can't. It's that kind of place.",
+  "components": [
+   "vctk/p258_086_mic1",
+   "vctk/p258_128_mic1",
+   "vctk/p258_054_mic1"
+  ]
+ }
+]
