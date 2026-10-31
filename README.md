@@ -6,6 +6,18 @@
 TOKUDER（ARIB STD-T99 デジタル小電力コミュニティ無線（DRCR）の音声コーデック）の TCH 音声フレームを、音声に戻すニューラルデコーダーです。
 TOKUDER の仕様は公開されていないため、実機で送信したクリーン音声と、受信したフレームの組から、デコーダーを学習しました。
 
+## 試聴
+
+合成音声（Qwen3-TTS で生成、CC0）を実機の無線機で送信し、SDR で受信したフレームを、このデコーダーで復号しました。
+
+| 声 | 読み上げた文 | 元の音声 | `tokuder48_causal_v1`（標準） | `tokuder48_v1` |
+|---|---|---|---|---|
+| 女性 | このソフトウェアは、すべての人のために、常に自由であり続けます。 | [original.wav](https://github.com/tallcat4/tokuder-neurodec/raw/main/examples/qwen3-tts/female/original.wav) | [decoded_tokuder48_causal_v1.wav](https://github.com/tallcat4/tokuder-neurodec/raw/main/examples/qwen3-tts/female/decoded_tokuder48_causal_v1.wav) | [decoded_tokuder48_v1.wav](https://github.com/tallcat4/tokuder-neurodec/raw/main/examples/qwen3-tts/female/decoded_tokuder48_v1.wav) |
+| 男性 | GPL-3.0は、研究、改変、共有する自由を保証するオープンなライセンスです。 | [original.wav](https://github.com/tallcat4/tokuder-neurodec/raw/main/examples/qwen3-tts/male/original.wav) | [decoded_tokuder48_causal_v1.wav](https://github.com/tallcat4/tokuder-neurodec/raw/main/examples/qwen3-tts/male/decoded_tokuder48_causal_v1.wav) | [decoded_tokuder48_v1.wav](https://github.com/tallcat4/tokuder-neurodec/raw/main/examples/qwen3-tts/male/decoded_tokuder48_v1.wav) |
+
+- **受信したフレーム**: 受信したそのままのフレームと LLR も同梱しています。手元で復号し直せます（[examples/qwen3-tts](examples/qwen3-tts/README.md)）。
+- **元の音声との比較**: 元の音声を 8 kHz に落として比べると、PESQ は標準のモデルで女性 2.79・男性 2.67（`tokuder48_v1` は 2.81・2.57）、STOI は女性 0.86・男性 0.88（同 0.85・0.87）です。
+
 ## 中身
 
 | 部分 | 内容 |
@@ -14,7 +26,7 @@ TOKUDER の仕様は公開されていないため、実機で送信したクリ
 | デコーダー | 48 bit/20 ms → 8 kHz 音声。ビットトークンのフロントエンド（メル・F0・有声度・帯域非周期性を予測）＋ iSTFT ボコーダー（Vocos 型、調波＋雑音の励振） |
 | 学習済みモデル | `models/<名前>.pt`（重み）と `models/<名前>.json`（構造・学習条件・評価値）。[下の「モデル」](#モデル)を参照 |
 | 入力形式 | 9 バイト/フレームのバイナリ（＋任意で LLR）、16 進テキスト、受信ログのディレクトリ（rf.jsonl、rf.llr） |
-| 試聴用の例 | `examples/qwen3-tts/`: 元の音声と、それを実機で送信・SDR で受信し、このデコーダーで復号した音声（[下の「試聴」](#試聴)） |
+| 試聴用の例 | `examples/qwen3-tts/`: 元の音声と、それを実機で送信・SDR で受信し、このデコーダーで復号した音声（[上の「試聴」](#試聴)） |
 | サンプル | `samples/`: 実機から受信してキャプチャした、そのままの TCH 音声フレームと LLR（VCTK の未知話者 4 人、各約 9 秒。[説明](samples/README.md)） |
 
 モデルの学習には [neurodec](https://github.com/tallcat4/neurodec) を使いました。このリポジトリには推論に必要な部分だけを入れています。パラメータ名は neurodec と同じで、neurodec のチェックポイントの重み（`G`）をそのまま読み込めます。
@@ -47,18 +59,6 @@ TOKUDER の仕様は公開されていないため、実機で送信したクリ
 - **得意・不得意**:
   - 学習データは音声だけです。トーンなどの音声以外の信号は再現しません。規格書の 1031 Hz 試験データも、トーンとしては復号されません。
   - 低い声（男性）は、高い声よりやや苦手です。
-
-## 試聴
-
-合成音声（Qwen3-TTS で生成、CC0）を実機の無線機で送信し、SDR で受信したフレームを、このデコーダーで復号しました。
-
-| 声 | 読み上げた文 | 元の音声 | 実機で送信 → SDR で受信 → 本デコーダーで復号 |
-|---|---|---|---|
-| 女性 | このソフトウェアは、すべての人のために、常に自由であり続けます。 | [original.wav](https://github.com/tallcat4/tokuder-neurodec/raw/main/examples/qwen3-tts/female/original.wav) | [decoded.wav](https://github.com/tallcat4/tokuder-neurodec/raw/main/examples/qwen3-tts/female/decoded.wav)（標準）、[tokuder48_v1](https://github.com/tallcat4/tokuder-neurodec/raw/main/examples/qwen3-tts/female/decoded_tokuder48_v1.wav) |
-| 男性 | GPL-3.0は、研究、改変、共有する自由を保証するオープンなライセンスです。 | [original.wav](https://github.com/tallcat4/tokuder-neurodec/raw/main/examples/qwen3-tts/male/original.wav) | [decoded.wav](https://github.com/tallcat4/tokuder-neurodec/raw/main/examples/qwen3-tts/male/decoded.wav)（標準）、[tokuder48_v1](https://github.com/tallcat4/tokuder-neurodec/raw/main/examples/qwen3-tts/male/decoded_tokuder48_v1.wav) |
-
-- **受信したフレーム**: 受信したそのままのフレームと LLR も同梱しています。手元で復号し直せます（[examples/qwen3-tts](examples/qwen3-tts/README.md)）。
-- **元の音声との比較**: 元の音声を 8 kHz に落として比べると、PESQ は標準のモデルで女性 2.79・男性 2.67（`tokuder48_v1` は 2.81・2.57）、STOI は女性 0.86・男性 0.88（同 0.85・0.87）です。
 
 ## 動作環境
 
