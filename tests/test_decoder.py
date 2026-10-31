@@ -1,11 +1,15 @@
 from pathlib import Path
 
 import numpy as np
+import pytest
 import soundfile as sf
+import torch
 
 from tokuder_neurodec import cli, decode, fec, frames, load
 
-MODEL = Path(__file__).resolve().parent.parent / "models" / "tokuder48_v1.pt"
+MODELS = Path(__file__).resolve().parent.parent / "models"
+MODEL = MODELS / "tokuder48_causal_v1.pt"  # the default model
+LARGE = MODELS / "tokuder48_v1.pt"
 TV = "101011111011011011101111101101011001110000100000100010100000011011111101"  # ARIB STD-T99 Table Annex 2-7-1
 
 
@@ -14,14 +18,32 @@ def random_frames(n, seed=0):
     return fec.encode48(rng.integers(0, 2, (n, 48)).astype(np.uint8))
 
 
-def test_decode_shape_and_range():
-    G = load(MODEL)
+@pytest.mark.parametrize("model", [MODEL, LARGE])
+def test_decode_shape_and_range(model):
+    G = load(model)
     y = decode(G, fec.info48(random_frames(37)))
     assert y.shape == (37 * 160,) and np.isfinite(y).all() and np.abs(y).max() <= 1
 
 
-def test_chunked_equals_whole():
+def test_causal_model_uses_one_frame_ahead():
+    # changing frame t leaves every sample before frame t - 1 (minus the iSTFT overlap, 256 samples) unchanged
     G = load(MODEL)
+    bits = torch.from_numpy(fec.info48(random_frames(80, 3)).astype(np.float32))[None]
+    t = 60
+    flipped = bits.clone()
+    flipped[0, t] = 1 - flipped[0, t]
+    with torch.no_grad():
+        torch.manual_seed(0)
+        y0 = G(bits)[0]
+        torch.manual_seed(0)
+        y1 = G(flipped)[0]
+    first = int(torch.nonzero((y1 - y0).abs() > 1e-6).min())
+    assert 160 * (t - 1) - 256 <= first < 160 * t
+
+
+@pytest.mark.parametrize("model", [MODEL, LARGE])
+def test_chunked_equals_whole(model):
+    G = load(model)
     info = fec.info48(random_frames(300, 1))
     whole = decode(G, info, chunk_frames=1500)
     chunked = decode(G, info, chunk_frames=100, context=200)  # context covers the receptive field

@@ -51,7 +51,7 @@ def load(model_path: str | Path, device: str = "cpu") -> Decoder:
     return G.to(device).eval()
 
 
-def decode(G: Decoder, bits: np.ndarray, device: str = "cpu", chunk_frames: int = 1500, context: int = 52,
+def decode(G: Decoder, bits: np.ndarray, device: str = "cpu", chunk_frames: int = 1500, context: int = 80,
            seed: int = 0) -> np.ndarray:
     """bits [T, 48] -> float32 wav [160 T] in [-1, 1]. Long inputs are decoded in chunks with `context`
     frames of overlap on both sides; chunk boundaries stay on RF-frame boundaries (multiples of 4)."""

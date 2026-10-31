@@ -4,7 +4,8 @@
 |---|---|
 | `<声>/original.wav` | 送信した元の音声（24 kHz） |
 | `<声>/frames.bin`、`frames.llr` | 実機の無線機から送信した電波を SDR で受信してキャプチャした、そのままの TCH 音声フレームと、受信機が出した LLR（形式は [samples/README.md](../../samples/README.md) と同じ） |
-| `<声>/decoded.wav` | 上のフレームを、このリポジトリのデコーダーで復号した音声（8 kHz） |
+| `<声>/decoded.wav` | 上のフレームを、このリポジトリの標準のモデル（`tokuder48_causal_v1`）で復号した音声（8 kHz） |
+| `<声>/decoded_tokuder48_v1.wav` | 同じフレームを `tokuder48_v1`（非因果的なモデル）で復号した音声 |
 | `<声>/text.txt` | 読み上げた文 |
 | `generation.json` | 音声の生成条件（モデル、リビジョン、声の指示文、シード） |
 
@@ -14,10 +15,11 @@
 - **フレームの中身**: 入っているのは TCH（音声）フレームだけです。制御チャネルは含みません。
   - 消失フレームはありません。
   - 全フレームに受信機自身の LLR が付いています（値を補ったフレームはありません）。
-- **復号の再現**: `decoded.wav` は次のコマンドで作りました。
+- **復号の再現**: `decoded.wav` と `decoded_tokuder48_v1.wav` は次のコマンドで作りました。
 
   ```bash
   tokuder2wav examples/qwen3-tts/female/frames.bin decoded.wav --llr examples/qwen3-tts/female/frames.llr
+  tokuder2wav examples/qwen3-tts/female/frames.bin decoded_tokuder48_v1.wav --llr examples/qwen3-tts/female/frames.llr --model models/tokuder48_v1.pt
   ```
 
 ## ライセンス

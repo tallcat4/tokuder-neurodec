@@ -10,7 +10,7 @@ import torch
 from . import frames
 from .model import FRAME, SR, decode, load
 
-DEFAULT_MODEL = Path(__file__).resolve().parent.parent / "models" / "tokuder48_v1.pt"
+DEFAULT_MODEL = Path(__file__).resolve().parent.parent / "models" / "tokuder48_causal_v1.pt"
 
 
 def main(argv=None):
